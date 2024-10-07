@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
-import 'package:upxv/pages/help_page.dart';
+import 'package:upxv/pages/forgot_password_page.dart';
+import 'package:upxv/pages/workspace_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -81,7 +82,7 @@ class LoginPage extends StatelessWidget {
                           SizedBox(height: 10,),
                           TextField(
                             decoration: InputDecoration(
-                              hintText: 'Password',
+                              hintText: 'Senha',
                               hintStyle: TextStyle(
                                 color: Colors.grey[400]
                               )
@@ -93,7 +94,7 @@ class LoginPage extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(child: ElevatedButton(onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => HelpPage()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage()));
                               }, child: Text("ENTRAR"),)),
                             ],
                           ),
@@ -104,7 +105,9 @@ class LoginPage extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Expanded(child: TextButton(onPressed: () {}, child: Text("ESQUECI A SENHA")))
+                              Expanded(child: TextButton(onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
+                              }, child: Text("ESQUECI A SENHA")))
                             ],
                           )
                         ],
