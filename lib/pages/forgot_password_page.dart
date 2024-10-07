@@ -10,7 +10,6 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   bool _isObscured = true;
-  int timeDilation = 1;
   Icon _isLock = Icon(Icons.lock);
 
   @override
@@ -54,7 +53,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 SizedBox(height: 10,),
                 CheckboxListTile(
                   title: Text("Ver senha"),
-                  value: _isObscured,
+                  value: !_isObscured,
                   onChanged: (bool? value) {
                     setIsObscured();
                   },
