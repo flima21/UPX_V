@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:lorem_ipsum/lorem_ipsum.dart';
 import 'package:upxv/pages/home_page.dart';
+import 'package:upxv/pages/login_page.dart';
 
 class HelloPage extends StatefulWidget {
   const HelloPage({super.key});
@@ -12,16 +10,13 @@ class HelloPage extends StatefulWidget {
 }
 
 class _HelloPageState extends State<HelloPage> {
-  Color _colorBackground = Colors.transparent;
+  // Color _colorBackground = Colors.transparent;
   Color _colorForeground = Colors.white;
   Color _colorBackgroudButton = Colors.amber;
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: _colorBackground,
-      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -87,15 +82,11 @@ class _HelloPageState extends State<HelloPage> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              pageStarted();
+                              pageLogin();
                             },
                             child: Text("JÁ SOU CLIENTE",style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),),
-                            style: ButtonStyle(
-                              foregroundColor: WidgetStatePropertyAll<Color>(Colors.black),
-                              backgroundColor: WidgetStatePropertyAll<Color>(_colorBackgroudButton)
-                            ),
                           ),
                         ),
                       ],
@@ -112,7 +103,7 @@ class _HelloPageState extends State<HelloPage> {
 
   void effectContainer() {
     setState(() {
-      _colorBackground = Colors.green;
+      // _colorBackground = Colors.green;
       _colorForeground = Colors.black;
       _colorBackgroudButton = Colors.brown;
     });
@@ -138,4 +129,27 @@ class _HelloPageState extends State<HelloPage> {
       )
     );
   }
+
+  void pageLogin() {
+    Navigator.push(
+      context, 
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.easeOut;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      )
+    );
+  }
+
+
 }
