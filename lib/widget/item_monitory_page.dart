@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upxv/utils/Monitory.dart';
+import 'package:upxv/utils/monitory.dart';
 
 class ItemMonitoryPage extends StatelessWidget {
   const ItemMonitoryPage({super.key, required this.monitory});
@@ -17,11 +17,20 @@ class ItemMonitoryPage extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: GestureDetector(
             onTap: () {},
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(monitory.dateTime.toUtc().toString()),
-                SizedBox(width: 10,),
-                Text(monitory.message),
+                Row(
+                  children: [
+                    Text(monitory.dateTime.toIso8601String().toString()),
+                    SizedBox(width: 10,),
+                    Text(monitory.message),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Image.asset(monitory.image),
+                )
               ],
             ),
           ),
