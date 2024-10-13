@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:upxv/pages/hello_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const MyApp());
+  // Verifique se o Firebase já está inicializado
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+  
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
