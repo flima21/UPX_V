@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
+import 'package:upxv/pages/administration_page.dart';
 import 'package:upxv/pages/forgot_password_page.dart';
 import 'package:upxv/pages/workspace_page.dart';
 
@@ -94,7 +95,7 @@ class LoginPage extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(child: ElevatedButton(onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage(),)));
                               }, child: Text("ENTRAR"),)),
                             ],
                           ),

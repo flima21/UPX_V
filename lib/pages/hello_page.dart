@@ -11,7 +11,6 @@ class HelloPage extends StatefulWidget {
 
 class _HelloPageState extends State<HelloPage> {
   // Color _colorBackground = Colors.transparent;
-  Color _colorForeground = Colors.white;
   Color _colorBackgroudButton = Colors.amber;
   
   @override
@@ -32,20 +31,16 @@ class _HelloPageState extends State<HelloPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Image.asset('assets/securityLogo.png'),
-                  // Icon(Icons.house_outlined,size: 200,color: _colorForeground,),
                   Text("SEJA BEM VINDO AO CROSS LINE!",style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.normal,
                     fontSize: 20,
-                    color: _colorForeground
                   ),),
                   Text(
                     "O SEU APLICATIVO DE SEGURANÇA PARA SUA ÁREA RESIDENCIAL",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
-                      color: _colorForeground
                     ),
                   )
                 ],
@@ -99,14 +94,6 @@ class _HelloPageState extends State<HelloPage> {
         ),
       ),
     );
-  }
-
-  void effectContainer() {
-    setState(() {
-      // _colorBackground = Colors.green;
-      _colorForeground = Colors.black;
-      _colorBackgroudButton = Colors.brown;
-    });
   }
 
   void pageStarted() {

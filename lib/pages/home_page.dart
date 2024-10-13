@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upxv/pages/help_page.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
-import 'package:upxv/widget/home_started_button_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

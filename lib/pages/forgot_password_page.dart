@@ -30,7 +30,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    labelText: 'E-mail',
+                    hintText: 'E-mail',
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -38,7 +38,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 TextField(
                   decoration: InputDecoration(
                     // suffix: TextButton(onPressed: () { setIsObscured(); }, child: _isLock),
-                    labelText: 'Nova Senha',
+                    hintText: 'Nova Senha',
                   ),
                   obscureText: _isObscured,
                 ),
@@ -46,7 +46,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 TextField(
                   decoration: InputDecoration(
                     // suffix: TextButton(onPressed: () { setIsObscured(); }, child: _isLock),
-                    labelText: 'Confirme Senha',
+                    hintText: 'Confirme Senha',
                   ),
                   obscureText: _isObscured,
                 ),
