@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:upxv/utils/Monitory.dart';
+import 'package:upxv/services/monitory_repository.dart';
+import 'package:upxv/utils/monitory.dart';
 import 'package:upxv/widget/item_monitory_page.dart';
 
 class MonitoryPage extends StatefulWidget {
@@ -10,14 +11,22 @@ class MonitoryPage extends StatefulWidget {
 }
 
 class _MonitoryPageState extends State<MonitoryPage> {
+  final MonitoryRepository monitoryRepository = MonitoryRepository();
+  final TextEditingController dateController = TextEditingController();
 
-  final List<Monitory> monitory = [];
+  List<Monitory> monitory = [];
+  List<Monitory> tmpMonitory = [];
 
   @override
   void initState() {
-    // TODO: implement initState
-    populateListTest();
     super.initState();
+
+    monitoryRepository.findAll().then((value) => {
+      setState(() {
+        monitory = value;
+        tmpMonitory = value;
+      })
+    });
   }
 
   @override
@@ -31,6 +40,26 @@ class _MonitoryPageState extends State<MonitoryPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              ListTile(title: Text("FILTRAR"),),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      if (value.isEmpty) {
+                        monitory = tmpMonitory;
+                      }
+                      else {
+                        onFilterGrid();
+                      }
+                    });
+                  },
+                  controller: dateController,
+                  decoration: InputDecoration(
+                    labelText: 'Data',
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text("ACOMPANHE SEU HISTÓRICO",style: TextStyle(fontWeight: FontWeight.bold),),
@@ -56,11 +85,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
     );
   }
 
-  void populateListTest() {
-    setState(() {
-      for (var i = 0; i < 20; i++) {
-        monitory.add(Monitory(dateTime: DateTime.now(),location: "itu",message: "oi"));
-      }    
-    });
+  void onFilterGrid() {
+    monitory = monitory.where((element) => element.dateTime == DateTime.parse(dateController.text)).toList();
   }
 }
