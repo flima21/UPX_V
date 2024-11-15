@@ -99,11 +99,11 @@ class LoginPage extends StatelessWidget {
                               }, child: Text("ENTRAR"),)),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Expanded(child: ElevatedButton(onPressed: () {}, child: Text("REGISTRAR"))),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(child: ElevatedButton(onPressed: () {}, child: Text("REGISTRAR"))),
+                          //   ],
+                          // ),
                           Row(
                             children: [
                               Expanded(child: TextButton(onPressed: () {

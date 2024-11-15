@@ -29,7 +29,7 @@ class ItemMonitoryPage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(monitory.image),
+                  child: Image.network(monitory.image) //Image.asset(monitory.image),
                 )
               ],
             ),
