@@ -45,3 +45,6 @@ app.*.map.json
 firebase_options.dart
 firebase.json
 firepit-log.txt
+
+*.png
+*.jpg
