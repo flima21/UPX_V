@@ -4,45 +4,60 @@ import 'package:upxv/pages/administration_page.dart';
 import 'package:upxv/pages/forgot_password_page.dart';
 import 'package:upxv/pages/workspace_page.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () {
           showModalBottomSheet<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                height: 500,
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.all(20),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.all(10),
-                          children: [
-                            Text(loremIpsum(words: 2),style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                            Text(loremIpsum(words: 100),textAlign: TextAlign.justify,),
-                          ],
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 500,
+                  padding: EdgeInsets.all(20),
+                  margin: EdgeInsets.all(20),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.all(10),
+                            children: [
+                              Text(
+                                loremIpsum(words: 2),
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                loremIpsum(words: 100),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        child: const Text('FECHAR'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
+                        TextButton(
+                          child: const Text('FECHAR'),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }
-          );
+                );
+              });
         },
         child: Icon(Icons.help_sharp),
       ),
@@ -58,8 +73,9 @@ class LoginPage extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: FlutterLogo(size: 23,)
-                  ),
+                      child: FlutterLogo(
+                    size: 23,
+                  )),
                 ],
               ),
               Row(
@@ -72,31 +88,36 @@ class LoginPage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
+                            controller: emailController,
                             decoration: InputDecoration(
-                              hintText: 'E-mail',
-                              hintStyle: TextStyle(
-                                color: Colors.grey[400]
-                              )
-                            ),
+                                hintText: 'E-mail',
+                                hintStyle: TextStyle(color: Colors.grey[400])),
                             keyboardType: TextInputType.emailAddress,
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           TextField(
+                            controller: passwordController,
                             decoration: InputDecoration(
-                              hintText: 'Senha',
-                              hintStyle: TextStyle(
-                                color: Colors.grey[400]
-                              )
-                            ),
+                                hintText: 'Senha',
+                                hintStyle: TextStyle(color: Colors.grey[400])),
                             keyboardType: TextInputType.emailAddress,
                             obscureText: true,
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             children: [
-                              Expanded(child: ElevatedButton(onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage(),)));
-                              }, child: Text("ENTRAR"),)),
+                              Expanded(
+                                  child: ElevatedButton(
+                                onPressed: loginMockUser,
+                                child: Text("ENTRAR"),
+                              )),
+                              // Expanded(child: ElevatedButton(onPressed: () {
+                              //   Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage(),)));
+                              // }, child: Text("ENTRAR"),)),
                             ],
                           ),
                           // Row(
@@ -104,13 +125,13 @@ class LoginPage extends StatelessWidget {
                           //     Expanded(child: ElevatedButton(onPressed: () {}, child: Text("REGISTRAR"))),
                           //   ],
                           // ),
-                          Row(
-                            children: [
-                              Expanded(child: TextButton(onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
-                              }, child: Text("ESQUECI A SENHA")))
-                            ],
-                          )
+                          // Row(
+                          //   children: [
+                          //     Expanded(child: TextButton(onPressed: () {
+                          //       Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
+                          //     }, child: Text("ESQUECI A SENHA")))
+                          //   ],
+                          // )
                         ],
                       ),
                     ),
@@ -122,5 +143,30 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void loginMockUser() {
+    String emailText = emailController.text;
+    String password = passwordController.text;
+
+    if (emailText == 'admin@admin.com.br' && password == 'admin123') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  WorkspacePage(actually: AdministrationPage())));
+    } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'USUÁRIO OU SENHA INVÁLIDA',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          duration: Duration(seconds: 5),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
