@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
 import 'package:upxv/pages/administration_page.dart';
 import 'package:upxv/pages/forgot_password_page.dart';
+import 'package:upxv/pages/sign_up_page.dart';
 import 'package:upxv/pages/workspace_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -13,7 +16,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -120,18 +122,20 @@ class _LoginPageState extends State<LoginPage> {
                               // }, child: Text("ENTRAR"),)),
                             ],
                           ),
-                          // Row(
-                          //   children: [
-                          //     Expanded(child: ElevatedButton(onPressed: () {}, child: Text("REGISTRAR"))),
-                          //   ],
-                          // ),
-                          // Row(
-                          //   children: [
-                          //     Expanded(child: TextButton(onPressed: () {
-                          //       Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
-                          //     }, child: Text("ESQUECI A SENHA")))
-                          //   ],
-                          // )
+                          Row(
+                            children: [
+                              Expanded(child: TextButton(onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                              }, child: Text("REGISTRAR")))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(child: TextButton(onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
+                              }, child: Text("ESQUECI A SENHA")))
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -145,17 +149,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void loginMockUser() {
+  void loginMockUser() async {
     String emailText = emailController.text;
     String password = passwordController.text;
 
-    if (emailText == 'admin@admin.com.br' && password == 'admin123') {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  WorkspacePage(actually: AdministrationPage())));
-    } else {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailText, password: password).then((e) => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage(),)))
+      });
+    } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

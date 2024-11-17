@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
 import 'package:upxv/pages/administration_page.dart';
@@ -19,6 +20,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
   @override
   void initState() {
     // TODO: implement initState
+    isSignIn();
     super.initState();
     widgetSelected = widget.actually;
   }
@@ -80,9 +82,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HelloPage()));
-                }, 
+                onPressed: onSignOut,
                 child: Row(
                   children: [
                     Icon(Icons.logout),
@@ -108,5 +108,33 @@ class _WorkspacePageState extends State<WorkspacePage> {
         child: Center(child: widgetSelected),
       ),
     );
+  }
+
+  void onSignOut() async {
+    try {
+      await FirebaseAuth.instance.signOut().then((e) => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HelloPage()))
+      });
+    } on FirebaseAuthException catch(e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.message.toString(),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          duration: Duration(seconds: 5),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void isSignIn() async {
+    FirebaseAuth.instance.userChanges().listen((User? user) {
+      if (user == null) {
+        Navigator.pushReplacementNamed(context, '/login');
+      } 
+    });
   }
 }
