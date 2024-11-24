@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:upxv/utils/monitory.dart';
+import 'package:intl/intl.dart';
 
 class ItemMonitoryPage extends StatelessWidget {
   const ItemMonitoryPage({super.key, required this.monitory});
@@ -22,7 +23,7 @@ class ItemMonitoryPage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(monitory.dateTime.toIso8601String().toString()),
+                    Text(DateFormat('dd/MM/yyyy').format(monitory.dateTime)),
                     SizedBox(width: 10,),
                     Text(monitory.message),
                   ],

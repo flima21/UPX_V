@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:upxv/services/monitory_repository.dart';
 import 'package:upxv/utils/monitory.dart';
 import 'package:upxv/widget/item_monitory_page.dart';
+import 'package:date_field/date_field.dart';
+import 'package:intl/intl.dart';
 
 class MonitoryPage extends StatefulWidget {
   const MonitoryPage({super.key});
@@ -14,6 +16,8 @@ class _MonitoryPageState extends State<MonitoryPage> {
   final MonitoryRepository monitoryRepository = MonitoryRepository();
   final TextEditingController dateController = TextEditingController();
 
+  DateTime? selectedDate;
+
   List<Monitory> monitory = [];
   List<Monitory> tmpMonitory = [];
 
@@ -22,11 +26,11 @@ class _MonitoryPageState extends State<MonitoryPage> {
     super.initState();
 
     monitoryRepository.findAll().then((value) => {
-      setState(() {
-        monitory = value;
-        tmpMonitory = value;
-      })
-    });
+          setState(() {
+            monitory = value;
+            tmpMonitory = value;
+          })
+        });
   }
 
   @override
@@ -40,40 +44,59 @@ class _MonitoryPageState extends State<MonitoryPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(title: Text("FILTRAR"),),
+              ListTile(
+                title: Text("FILTRAR"),
+              ),
               Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      if (value.isEmpty) {
-                        monitory = tmpMonitory;
-                      }
-                      else {
-                        onFilterGrid();
-                      }
-                    });
-                  },
-                  controller: dateController,
-                  decoration: InputDecoration(
-                    labelText: 'Data',
-                  ),
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DateTimeField(
+                        decoration: InputDecoration(
+                          labelText: 'Data',
+                          border: OutlineInputBorder(),
+                        ),
+                        mode: DateTimeFieldPickerMode.date,
+                        onChanged: (DateTime? value) => {
+                          setState(() {
+                            selectedDate = value;
+                          })
+                        },
+                        value: selectedDate,
+                      ),
+                      flex: 3,
+                    ),
+                    Expanded(
+                      child: TextButton(
+                          onPressed: onFilterGrid, child: Icon(Icons.search)),
+                    ),
+                  ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text("ACOMPANHE SEU HISTÓRICO",style: TextStyle(fontWeight: FontWeight.bold),),
+                child: Text(
+                  "ACOMPANHE SEU HISTÓRICO",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               Expanded(
                 child: ListView(
                   children: [
-                    for(Monitory item in monitory)
-                      ItemMonitoryPage(monitory: item,),
-                    
-                    SizedBox(height: 20,),
+                    for (Monitory item in monitory)
+                      ItemMonitoryPage(
+                        monitory: item,
+                      ),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Text("Total de registros ${monitory.length.toString()}",style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        "Total de registros ${monitory.length.toString()}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -86,6 +109,18 @@ class _MonitoryPageState extends State<MonitoryPage> {
   }
 
   void onFilterGrid() {
-    monitory = monitory.where((element) => element.dateTime == DateTime.parse(dateController.text)).toList();
+    setState(() {
+      monitory = tmpMonitory;
+
+      if (selectedDate != null) {
+        var selectedDateFormat = DateFormat('yyyy-MM-dd').format(selectedDate!);
+
+        monitory = monitory.where((element) {
+          var selectedDateFilter = DateFormat('yyyy-MM-dd').format(element.dateTime); 
+          return selectedDateFilter == selectedDateFormat;
+        }).toList();
+
+      }
+    });
   }
 }
