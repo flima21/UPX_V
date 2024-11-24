@@ -135,7 +135,12 @@ class _WorkspacePageState extends State<WorkspacePage> {
   }
 
   void isAuth() async {
-    if (_authService.me() == null) {
+    try {
+      if (_authService.me() == null) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    }
+    on Exception catch (_) {
       Navigator.pushReplacementNamed(context, '/login');
     }
   }
