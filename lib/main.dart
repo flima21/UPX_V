@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:upxv/pages/hello_page.dart';
+import 'package:upxv/pages/administration_page.dart';
+import 'package:upxv/pages/forgot_password_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:upxv/pages/login_page.dart';
+import 'package:upxv/pages/monitory_page.dart';
+import 'package:upxv/pages/sign_up_page.dart';
+import 'package:upxv/pages/workspace_page.dart';
 import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +18,8 @@ void main() async {
     );
   }
   
+  await FirebaseAuth.instance.setPersistence(Persistence.NONE);
+
   runApp(MyApp());
 }
 
@@ -116,7 +124,15 @@ class MyApp extends StatelessWidget {
           titleSmall: TextStyle(color: Colors.white),
         )
       ),
-      home: const HelloPage(),
-    );
+      // home: const WorkspacePage(actually: AdministrationPage(),),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginPage(),
+        '/login': (context) => LoginPage(),
+        '/register': (context) => SignUpPage(),
+        '/forgot-password': (context) => ForgotPasswordPage(),
+        '/workspace': (context) => WorkspacePage(actually: MonitoryPage(),),
+      }
+   );
   }
 }
