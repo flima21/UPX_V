@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:upxv/pages/hello_page.dart';
+import 'package:upxv/services/authentication_service.dart';
+import 'package:upxv/services/toast_service.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -9,9 +10,11 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  bool _isObscured = true;
-  Icon _isLock = Icon(Icons.lock);
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
 
+  AuthenticationService _authenticationService = AuthenticationService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,42 +32,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     hintText: 'E-mail',
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 10,),
-                TextField(
-                  decoration: InputDecoration(
-                    // suffix: TextButton(onPressed: () { setIsObscured(); }, child: _isLock),
-                    hintText: 'Nova Senha',
-                  ),
-                  obscureText: _isObscured,
-                ),
-                SizedBox(height: 10,),
-                TextField(
-                  decoration: InputDecoration(
-                    // suffix: TextButton(onPressed: () { setIsObscured(); }, child: _isLock),
-                    hintText: 'Confirme Senha',
-                  ),
-                  obscureText: _isObscured,
-                ),
-                SizedBox(height: 10,),
-                CheckboxListTile(
-                  title: Text("Ver senha"),
-                  value: !_isObscured,
-                  onChanged: (bool? value) {
-                    setIsObscured();
-                  },
-                  secondary: _isLock
-                ),
-                SizedBox(height: 10,),
                 Row(
                   children: [
-                    Expanded(child: ElevatedButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HelloPage()));
-                    }, child: Text("REDEFINIR A SENHA"))),
+                    Expanded(child: ElevatedButton(onPressed: updatePassword, child: Text("REDEFINIR A SENHA"))),
                   ],
                 ),
               ],
@@ -75,10 +52,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  void setIsObscured() {
-    setState(() {
-      _isObscured = _isObscured ? false : true;
-      _isLock = _isObscured ? Icon(Icons.lock_open) : Icon(Icons.lock);
-    });
+  void updatePassword() async {
+    ToastService toastService = ToastService(context: context);
+    
+    if (emailController.text.isNotEmpty) {
+      await _authenticationService.changePassword(emailController.text).then((response) => {
+        toastService.colorBackground = Colors.blue,
+        toastService.colorFont = Colors.black,
+        toastService.message = "O link de redefinição senha foi enviado para o email ${emailController.text}",
+        toastService.show(),
+
+        Navigator.pushReplacementNamed(context, '/login')
+      });
+    }
+    else {
+      toastService.colorBackground = Colors.red;
+      toastService.colorFont = Colors.black;
+      toastService.message = 'Campo e-mail não pode ser vazio!';
+      toastService.show();
+    }
   }
 }

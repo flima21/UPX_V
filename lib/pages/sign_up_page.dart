@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:upxv/pages/administration_page.dart';
+import 'package:upxv/services/authentication_service.dart';
+import 'package:upxv/services/toast_service.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -10,6 +10,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final AuthenticationService _authenticationService = AuthenticationService();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -40,7 +42,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextField(
                   controller: passwordController,
                   decoration: InputDecoration(
-                    // suffix: TextButton(onPressed: () { setIsObscured(); }, child: _isLock),
                     hintText: 'Senha',
                   ),
                   obscureText: true,
@@ -61,35 +62,18 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void onSignUp() async {
-    String email = emailController.text;
-    String password = passwordController.text;
+    ToastService toastService = ToastService(context: context);
 
-    if (email.isNotEmpty & password.isNotEmpty) {
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) => {
-          showToast('Usuário logado',Colors.green),
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AdministrationPage()))
-        });
-      } on FirebaseAuthException catch(e) {
-        showToast(e.message.toString(), Colors.red);
-      }
+    if (emailController.text.isNotEmpty & passwordController.text.isNotEmpty) {
+      _authenticationService.register(emailController.text, passwordController.text).then((response) => {
+        Navigator.pushReplacementNamed(context, '/workspace')
+      });
     } 
     else {
-      showToast("Usuário e Senha são obrigatórios",Colors.red);
+      toastService.colorBackground = Colors.red;
+      toastService.colorFont = Colors.black;
+      toastService.message = 'Campo e-mail/senha não pode ser vazio!';
+      toastService.show();
     }
   }
-
-  void showToast(String message, Color color) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        duration: Duration(seconds: 5),
-        backgroundColor: color,
-      ),
-    );
-   }
 }

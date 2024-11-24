@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:upxv/pages/hello_page.dart';
 import 'package:upxv/pages/profile_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AdministrationPage extends StatefulWidget {
   const AdministrationPage({super.key});

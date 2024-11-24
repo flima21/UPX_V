@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
 import 'package:upxv/pages/administration_page.dart';
-import 'package:upxv/pages/hello_page.dart';
 import 'package:upxv/pages/monitory_page.dart';
+import 'package:upxv/services/authentication_service.dart';
+import 'package:upxv/services/toast_service.dart';
 
 class WorkspacePage extends StatefulWidget {
   const WorkspacePage({super.key, required this.actually});
@@ -16,11 +16,14 @@ class WorkspacePage extends StatefulWidget {
 
 class _WorkspacePageState extends State<WorkspacePage> {
   late Widget widgetSelected;
+  final AuthenticationService _authService = AuthenticationService();
   
   @override
   void initState() {
     // TODO: implement initState
-    isSignIn();
+    // implement auth
+    isAuth();
+
     super.initState();
     widgetSelected = widget.actually;
   }
@@ -111,30 +114,29 @@ class _WorkspacePageState extends State<WorkspacePage> {
   }
 
   void onSignOut() async {
-    try {
-      await FirebaseAuth.instance.signOut().then((e) => {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HelloPage()))
-      });
-    } on FirebaseAuthException catch(e) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.message.toString(),
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          duration: Duration(seconds: 5),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    // initiliaze auth
+    ToastService toastService = ToastService(context: context);
+
+    await _authService.logout().then((response) => {
+      toastService.colorBackground = Colors.green,
+      toastService.colorFont = Colors.black,
+      toastService.message = 'O usuário foi deslogado',
+      toastService.show(),
+      
+      // change screen
+      Navigator.pushReplacementNamed(context, '/login')
+    }).catchError((error) => {
+      toastService.colorBackground = Colors.red,
+      toastService.colorFont = Colors.white,
+      toastService.message = error.toString(),
+      toastService.show(),
+    });
+
   }
 
-  void isSignIn() async {
-    FirebaseAuth.instance.userChanges().listen((User? user) {
-      if (user == null) {
-        Navigator.pushReplacementNamed(context, '/login');
-      } 
-    });
+  void isAuth() async {
+    if (_authService.me() == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 }
