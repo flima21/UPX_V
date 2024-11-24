@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
 import 'package:upxv/pages/administration_page.dart';
 import 'package:upxv/pages/forgot_password_page.dart';
+import 'package:upxv/pages/monitory_page.dart';
 import 'package:upxv/pages/sign_up_page.dart';
 import 'package:upxv/pages/workspace_page.dart';
 import 'package:upxv/services/authentication_service.dart';
@@ -162,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
       _toastService.show(),
       
       // change screen
-      Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage())))
+      Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: MonitoryPage())))
     }).catchError((error) => {
       _toastService.colorBackground = Colors.red,
       _toastService.colorFont = Colors.white,
