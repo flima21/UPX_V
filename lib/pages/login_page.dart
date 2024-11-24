@@ -1,11 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lorem_ipsum/lorem_ipsum.dart';
 import 'package:upxv/pages/administration_page.dart';
 import 'package:upxv/pages/forgot_password_page.dart';
 import 'package:upxv/pages/sign_up_page.dart';
 import 'package:upxv/pages/workspace_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:upxv/services/authentication_service.dart';
+import 'package:upxv/services/toast_service.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -18,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  final AuthenticationService _authService = AuthenticationService();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Expanded(
                                   child: ElevatedButton(
-                                onPressed: loginMockUser,
+                                onPressed: login,
                                 child: Text("ENTRAR"),
                               )),
                               // Expanded(child: ElevatedButton(onPressed: () {
@@ -149,26 +151,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void loginMockUser() async {
-    String emailText = emailController.text;
-    String password = passwordController.text;
+  void login() async {
+    // initiliaze auth
+    ToastService _toastService = ToastService(context: context);
 
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailText, password: password).then((e) => {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage(),)))
-      });
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'USUÁRIO OU SENHA INVÁLIDA',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          duration: Duration(seconds: 5),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    _authService.login(emailController.text, passwordController.text).then((response) => {
+      _toastService.colorBackground = Colors.green,
+      _toastService.colorFont = Colors.black,
+      _toastService.message = 'Usuário logado com sucesso!',
+      _toastService.show(),
+      
+      // change screen
+      Navigator.push(context, MaterialPageRoute(builder: (context) => WorkspacePage(actually: AdministrationPage())))
+    }).catchError((error) => {
+      _toastService.colorBackground = Colors.red,
+      _toastService.colorFont = Colors.white,
+      _toastService.message = error.toString(),
+      _toastService.show(),
+    });
   }
 }

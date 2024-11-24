@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:upxv/services/authentication_service.dart';
+import 'package:upxv/services/toast_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -8,6 +11,18 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  @override
+  void initState() {
+    // attribute the name in email
+    getUser();
+    super.initState();
+  }
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  AuthenticationService authenticationService = AuthenticationService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,18 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),),
                 SizedBox(height: 20,),
                 TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Nome Completo',
-                    helper: Text(
-                      "Exemplo: José da Silva",
-                      style: TextStyle(
-                        color: Colors.grey.shade600
-                      ),
-                    )
-                  ),
-                  keyboardType: TextInputType.text,
-                ),
-                TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'E-mail',
                     enabled: false,
@@ -46,6 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 TextField(
+                  controller:passwordController,
                   decoration: InputDecoration(
                     labelText: 'Senha',
                   ),
@@ -56,9 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                      
-                        }, 
+                        onPressed: updatePassword,
                         child: Text("SALVAR")
                       ),
                     ),
@@ -70,5 +73,36 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void getUser() async {
+    emailController.text = authenticationService.me()!.email.toString();
+  }
+
+  void updatePassword() async {
+    ToastService toastService = ToastService(context: context);
+    User? userInformation = await authenticationService.me();
+
+    if (userInformation != null) {
+      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+        toastService.colorBackground = Colors.red;
+        toastService.colorFont = Colors.black;
+        toastService.message = 'Campo e-mail/senha não pode ser vazio!';
+      }
+      else {
+        await userInformation.updatePassword(passwordController.text);
+        
+        toastService.colorBackground = Colors.blue;
+        toastService.colorFont = Colors.black;
+        toastService.message = 'A senha foi trocada com sucesso';
+      }
+    }
+    else {
+        toastService.colorBackground = Colors.red;
+        toastService.colorFont = Colors.black;
+        toastService.message = 'Usuário não foi identificado!';
+    }
+  
+    toastService.show();
   }
 }
