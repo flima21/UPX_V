@@ -6,7 +6,7 @@ Apresentamos o Cross Line, um aplicativo simples e intuitivo que permite realiza
 * Jônatas Serna de Souza (211693)
 
 ## ALERTA :loudspeaker:
-O alerta é verificado a partir de um script em python que se utiliza da biblioteca <a href='https://github.com/flima21/cross-line'>OpenCv</a>, cujo é feita a leitura e exibição de imagens em diversos formatos (como JPG, PNG, BMP, entre outros) e vídeos, possibilitando, por isso, a captura e manipulação tanto em tempo real quanto de arquivos gravados, sendo possível assim o monitoramento das áreas determinadas pelo usuário.
+O alerta é verificado a partir de um script em python que se utiliza da biblioteca <a href='https://github.com/flima21/cross-line' target='_blank'>OpenCv</a>, cujo é feita a leitura e exibição de imagens em diversos formatos (como JPG, PNG, BMP, entre outros) e vídeos, possibilitando, por isso, a captura e manipulação tanto em tempo real quanto de arquivos gravados, sendo possível assim o monitoramento das áreas determinadas pelo usuário.
 
 ## PROJETO
 Neste repositório encontra-se o aplicativo mobile desenvolvido em flutter onde contém a interface amigável para ser utilizada. 
