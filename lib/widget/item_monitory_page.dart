@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:upxv/utils/monitory.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +32,8 @@ class ItemMonitoryPage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.network(monitory.image) //Image.asset(monitory.image),
+                  // child: Image.network(monitory.image) //Image.asset(monitory.image),
+                  child: Image.memory(base64Decode(monitory.image))
                 )
               ],
             ),
